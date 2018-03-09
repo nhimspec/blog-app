@@ -3,6 +3,7 @@ import path from 'path';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import auth from './routes/auth';
+import passport from 'passport';
 
 var isProduction = process.env.NODE_ENV === 'production';
 
@@ -18,10 +19,13 @@ if (isProduction) {
 }
 
 import './models/User';
+import './config/passport';
 
 import router from './routes';
+import store from './routes/store';
 
 // Register User
 app.use('/api', router);
+app.use('/store', store);
 
 export default app;

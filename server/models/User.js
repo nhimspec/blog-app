@@ -5,6 +5,7 @@ import jwt from 'jsonwebtoken';
 import config from '../config';
 
 const UserSchema = new mongoose.Schema({
+    fullname: String,
     username: {
         type: String,
         lowercase: true,
@@ -20,18 +21,20 @@ const UserSchema = new mongoose.Schema({
         match: [/\S+@\S+\.\S+/, 'is invalid'],
         index: true
     },
+    avatar: String,
+    salt: String,
     password: String
 }, { timestamps: true });
 
 UserSchema.plugin(uniqueValidator, { message: 'is already taken.' });
 
-UserSchema.methods.validPassword = function (pass) {
+UserSchema.methods.validPassword = function (password) {
     return this.password === crypto.pbkdf2Sync(password, this.salt, 10000, 512, 'sha512').toString('hex');
 };
 
-UserSchema.methods.setPassword = function (pass) {
+UserSchema.methods.setPassword = function (password) {
     this.salt = crypto.randomBytes(16).toString('hex');
-    this.password = crypto.pbkdf2Sync(pass, this.salt, 10000, 512, 'sha512').toString('hex');
+    this.password = crypto.pbkdf2Sync(password, this.salt, 10000, 512, 'sha512').toString('hex');
 };
 
 UserSchema.methods.generateJWT = function () {
@@ -48,8 +51,10 @@ UserSchema.methods.generateJWT = function () {
 
 UserSchema.methods.toAuthJSON = function () {
     return {
+        fullname: this.fullname,
         username: this.username,
         email: this.email,
+        avatar: this.avatar,
         token: this.generateJWT()
     };
 };

@@ -1,37 +1,77 @@
 import React, { Component } from "react";
 import { Redirect } from 'react-router-dom';
-import { Container, Row, Col, Card, CardBlock, CardFooter, Button, Form, Input, InputGroup, InputGroupAddon } from "reactstrap";
+import { Container, Row, Col, Card, CardBlock, CardFooter, Button, Form, Input, FormGroup, InputGroup, InputGroupAddon } from "reactstrap";
 
-import { client } from '../Client';
+import { auth } from '../../../api/Auth';
 
 class Register extends Component {
 	state = {
+		fullname: '',
 		username: '',
 		email: '',
 		password: '',
 		re_password: '',
-		validate: false,
-		logged: false
+		shouldRedirect: false,
+		fieldErrors: {},
+		registerInProcess: false,
+		file: '',
+		imagePreviewUrl: ''
 	};
 
 	onFormSubmit = (evt) => {
-		if (this.state.password === this.state.re_password) {
-			this.setState({ validate: true });
+		if (this.state.password !== this.state.re_password) {
+			this.setState({ fieldErrors: { password: 'Password not same' } });
 		} else {
-			this.setState({ validate: false });
-
+			// this.setState({ validate: false, registerInProcess: true });
 			const data = {
+				fullname: this.state.fullname,
 				username: this.state.username,
 				email: this.state.email,
 				password: this.state.password
 			}
-			client.register(data)
+			let formData = new FormData();
+			formData.append('file', this.state.file);
+			auth.register(formData)
 				.then((resp) => {
-					console.log(resp);
+					// this.setState({ shouldRedirect: true });
+				})
+				.catch((err) => {
+					const fieldErrors = this.showErrorSubmit(err.message);
+					this.setState({ fieldErrors, registerInProcess: false });
 				});
 		}
 		evt.preventDefault();
 	};
+	handleUpload = (e) => {
+		this.uploadField.click();
+	}
+	handleImageChange = (e) => {
+		e.preventDefault();
+
+		let reader = new FileReader();
+		let file = e.target.files[0];
+
+		reader.onloadend = () => {
+			this.setState({
+				file: file,
+				imagePreviewUrl: reader.result
+			});
+		}
+
+		reader.readAsDataURL(file)
+	}
+
+	showErrorSubmit = (data) => {
+		const errors = {};
+		if (data.username) errors.username = data.username;
+		if (data.email) errors.email = data.email;
+
+		return errors;
+	}
+
+	onFullnameChange = (e) => {
+		this.setState({ fullname: e.target.value });
+	}
 
 	onUsernameChange = (e) => {
 		this.setState({ username: e.target.value });
@@ -50,11 +90,12 @@ class Register extends Component {
 	}
 
 	render() {
-		if (this.state.logged) {
+		if (this.state.shouldRedirect || auth.isLoggedIn()) {
 			return (
-				<Redirect to='login' />
+				<Redirect to={this.props.location} />
 			);
 		} else {
+			let { imagePreviewUrl } = this.state;
 			return (
 				<div className="app flex-row align-items-center">
 					<Container>
@@ -68,12 +109,22 @@ class Register extends Component {
 										<h1>Register</h1>
 										<p className="text-muted">Create your account</p>
 										<InputGroup className="mb-3">
+											<InputGroupAddon><i className="icon-info"></i></InputGroupAddon>
+											<Input
+												type="text"
+												placeholder="Full Name"
+												value={this.state.fullname}
+												onChange={this.onFullnameChange}
+											/>
+										</InputGroup>
+										<InputGroup className="mb-3">
 											<InputGroupAddon><i className="icon-user"></i></InputGroupAddon>
 											<Input
 												type="text"
 												placeholder="Username"
 												value={this.state.username}
 												onChange={this.onUsernameChange}
+												className={this.state.fieldErrors.username ? 'is-invalid' : ''}
 											/>
 										</InputGroup>
 										<InputGroup className="mb-3">
@@ -83,6 +134,7 @@ class Register extends Component {
 												placeholder="Email"
 												value={this.state.email}
 												onChange={this.onEmailChange}
+												className={this.state.fieldErrors.email ? 'is-invalid' : ''}
 											/>
 										</InputGroup>
 										<InputGroup className="mb-3">
@@ -91,7 +143,7 @@ class Register extends Component {
 												type="password"
 												placeholder="Password"
 												onChange={this.onPasswordChange}
-												className={this.state.validate ? 'border-danger' : ''}
+												className={this.state.fieldErrors.password ? 'is-invalid' : ''}
 											/>
 										</InputGroup>
 										<InputGroup className="mb-4">
@@ -100,10 +152,38 @@ class Register extends Component {
 												type="password"
 												placeholder="Repeat Password"
 												onChange={this.onRePasswordChange}
-												className={this.state.validate ? 'border-danger' : ''}
+												className={this.state.fieldErrors.password ? 'is-invalid' : ''}
 											/>
 										</InputGroup>
-										<Button color="success" block type="submit">Create Account</Button>
+										<FormGroup className="mb-4">
+											<Button className="upload_avatar" type="button" onClick={this.handleUpload}>Upload Image</Button>
+											<Input
+												type="file"
+												getRef={(uploadField) => this.uploadField = uploadField}
+												style={{ display: "none" }}
+												onChange={this.handleImageChange}
+											/>
+											{
+												imagePreviewUrl && <img className="avatar_preview" src={imagePreviewUrl} />
+											}
+										</FormGroup>
+										{
+											this.state.registerInProcess ?
+												(<div className="sk-fading-circle">
+													<div className="sk-circle1 sk-circle"></div>
+													<div className="sk-circle2 sk-circle"></div>
+													<div className="sk-circle3 sk-circle"></div>
+													<div className="sk-circle4 sk-circle"></div>
+													<div className="sk-circle5 sk-circle"></div>
+													<div className="sk-circle6 sk-circle"></div>
+													<div className="sk-circle7 sk-circle"></div>
+													<div className="sk-circle8 sk-circle"></div>
+													<div className="sk-circle9 sk-circle"></div>
+													<div className="sk-circle10 sk-circle"></div>
+													<div className="sk-circle11 sk-circle"></div>
+													<div className="sk-circle12 sk-circle"></div>
+												</div>) : (<Button color="success" block type="submit">Create Account</Button>)
+										}
 									</Form>
 									<CardFooter className="p-4">
 										<Row>
