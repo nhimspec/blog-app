@@ -19,33 +19,18 @@ export default {
 			class: ""             // optional class names space delimited list for title item ex: "text-center"
 		},
 		{
-			name: 'Posts',
+			name: 'Blog',
 			url: '/post',
 			icon: 'icon-puzzle',
 			children: [
-				{
-					name: 'Buttons',
-					url: '/post/buttons',
-					icon: 'icon-puzzle'
-				},
 				{
 					name: 'Create Post',
 					url: '/post/create',
 					icon: 'icon-puzzle'
 				},
 				{
-					name: 'Modals',
-					url: '/post/modals',
-					icon: 'icon-puzzle'
-				},
-				{
-					name: 'Switches',
-					url: '/post/switches',
-					icon: 'icon-puzzle'
-				},
-				{
-					name: 'Tables',
-					url: '/post/tables',
+					name: 'Categories',
+					url: '/post/categories',
 					icon: 'icon-puzzle'
 				}
 			]

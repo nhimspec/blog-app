@@ -32,6 +32,10 @@ UserSchema.methods.validPassword = function (password) {
     return this.password === crypto.pbkdf2Sync(password, this.salt, 10000, 512, 'sha512').toString('hex');
 };
 
+UserSchema.methods.setImage = function (imageFile) {
+    this.avatar = config.store.image + imageFile;
+};
+
 UserSchema.methods.setPassword = function (password) {
     this.salt = crypto.randomBytes(16).toString('hex');
     this.password = crypto.pbkdf2Sync(password, this.salt, 10000, 512, 'sha512').toString('hex');

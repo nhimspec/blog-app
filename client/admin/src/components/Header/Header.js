@@ -12,6 +12,7 @@ import {
 	DropdownToggle
 } from 'reactstrap';
 import { Link } from 'react-router-dom';
+import { helper } from '../../utils/Helper';
 import { auth } from '../../api/Auth';
 
 class Header extends Component {
@@ -27,7 +28,7 @@ class Header extends Component {
 	}
 
 	testClick = () => {
-		console.log(this.state.user,this.state.user.fullname);
+		console.log(helper.getImageUrl(this.state.user.avatar));
 	}
 
 	toggle = () => {
@@ -86,7 +87,7 @@ class Header extends Component {
 					<NavItem>
 						<Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
 							<DropdownToggle className="nav-link dropdown-toggle">
-								<img src={'img/avatars/6.jpg'} className="img-avatar" alt={this.state.user.email} />
+								<img src={helper.getImageUrl(this.state.user.avatar)} className="img-avatar" alt={this.state.user.email} />
 								<span className="d-md-down-none">{this.state.user.fullname}</span>
 							</DropdownToggle>
 							<DropdownMenu right className={this.state.dropdownOpen ? 'show' : ''}>

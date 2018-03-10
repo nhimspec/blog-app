@@ -19,6 +19,7 @@ if (isProduction) {
 }
 
 import './models/User';
+import './models/Category';
 import './config/passport';
 
 import router from './routes';

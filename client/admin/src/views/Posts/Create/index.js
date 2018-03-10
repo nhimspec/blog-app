@@ -3,10 +3,6 @@ import {
 	Row,
 	Col,
 	Button,
-	ButtonDropdown,
-	DropdownToggle,
-	DropdownMenu,
-	DropdownItem,
 	Card,
 	CardHeader,
 	CardFooter,
@@ -15,10 +11,7 @@ import {
 	FormGroup,
 	FormText,
 	Label,
-	Input,
-	InputGroup,
-	InputGroupAddon,
-	InputGroupButton
+	Input
 } from "reactstrap";
 
 class PostCreate extends Component {

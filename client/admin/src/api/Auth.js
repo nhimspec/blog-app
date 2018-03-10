@@ -56,7 +56,6 @@ class Auth {
     }
 
     register(data) {
-        console.log(data);
         return fetch(this.url.register, {
             method: 'post',
             body: data

@@ -18,22 +18,28 @@ class Register extends Component {
 		imagePreviewUrl: ''
 	};
 
+	renameFileUpload = (fileName) => {
+		return `${Date.now()}-${fileName}`;
+	}
+
 	onFormSubmit = (evt) => {
 		if (this.state.password !== this.state.re_password) {
 			this.setState({ fieldErrors: { password: 'Password not same' } });
 		} else {
-			// this.setState({ validate: false, registerInProcess: true });
-			const data = {
-				fullname: this.state.fullname,
-				username: this.state.username,
-				email: this.state.email,
-				password: this.state.password
-			}
+			this.setState({ validate: false, registerInProcess: true });
+			let fileName = this.renameFileUpload(this.state.file.name);
 			let formData = new FormData();
-			formData.append('file', this.state.file);
+
+			formData.append('file', this.state.file, fileName);
+			formData.append('fullname', this.state.fullname);
+			formData.append('username', this.state.username);
+			formData.append('email', this.state.email);
+			formData.append('password', this.state.password);
+			formData.append('avatar', fileName);
+
 			auth.register(formData)
 				.then((resp) => {
-					// this.setState({ shouldRedirect: true });
+					this.setState({ shouldRedirect: true });
 				})
 				.catch((err) => {
 					const fieldErrors = this.showErrorSubmit(err.message);
@@ -65,6 +71,7 @@ class Register extends Component {
 		const errors = {};
 		if (data.username) errors.username = data.username;
 		if (data.email) errors.email = data.email;
+		if (data.file) errors.file = data.file;
 
 		return errors;
 	}
@@ -156,7 +163,12 @@ class Register extends Component {
 											/>
 										</InputGroup>
 										<FormGroup className="mb-4">
-											<Button className="upload_avatar" type="button" onClick={this.handleUpload}>Upload Image</Button>
+											<Button
+												className="upload_avatar"
+												className={this.state.fieldErrors.file ? 'upload_avatar btn-danger' : 'upload_avatar'}
+												type="button"
+												onClick={this.handleUpload}
+											>Upload Image</Button>
 											<Input
 												type="file"
 												getRef={(uploadField) => this.uploadField = uploadField}

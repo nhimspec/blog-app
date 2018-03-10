@@ -9,6 +9,7 @@ import Footer from '../../components/Footer/';
 
 import Dashboard from '../../views/Dashboard/';
 import PostCreate from '../../views/Posts/Create/';
+import Categories from '../../views/Posts/Categories/';
 import { auth } from '../../api/Auth';
 class Full extends Component {
 	render() {
@@ -24,6 +25,7 @@ class Full extends Component {
 								<Switch>
 									<Route path="/dashboard" name="Dashboard" component={Dashboard} />
 									<Route path="/post/create" name="post" component={PostCreate} />
+									<Route path="/post/categories" name="categories" component={Categories} />
 									<Redirect from="/" to="/dashboard" />
 								</Switch>
 							</Container>
