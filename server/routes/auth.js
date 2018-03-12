@@ -2,7 +2,7 @@ import jwt from 'express-jwt';
 import config from '../config';
 
 function getAuthToken(req) {
-    return req.body.auth_cd;
+    return req.headers.token;
 }
 
 var auth = {

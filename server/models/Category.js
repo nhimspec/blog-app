@@ -6,17 +6,26 @@ const CategorySchema = new mongoose.Schema({
     name: {
         type: String,
         unique: true,
-        required: [true, "can't be blank"]
+        required: [true, "Name can't be blank"]
     },
-    slug: String,
+    slug: {
+        type: String
+    },
     description: String
 }, { timestamps: true });
 
-CategorySchema.plugin(uniqueValidator, { message: 'is already taken.' });
+
 
 CategorySchema.methods.setSlug = function (categoryName) {
-    return this.slug === slug(categoryName);
+    this.slug = slug(categoryName, { lower: true });
 };
+
+CategorySchema.pre('save', function (next) {
+    if (this.isNew && 0 === this.foos.length) {
+        this.foos = undefined;
+    }
+    next();
+})
 
 
 var parentCategory = new mongoose.Schema({
@@ -24,9 +33,21 @@ var parentCategory = new mongoose.Schema({
     name: {
         type: String,
         unique: true,
-        required: [true, "can't be blank"]
+        required: [true, "Name can't be blank"]
     },
+    slug: {
+        type: String,
+        unique: true,
+        required: [true, "Slug can't be blank"]
+    },
+    slug: String,
+    description: String
 });
 
+parentCategory.methods.setSlug = function (categoryName) {
+    this.slug = slug(categoryName, { lower: true });
+};
+
+parentCategory.plugin(uniqueValidator, { message: 'is already taken.' });
 
 mongoose.model('Category', parentCategory);

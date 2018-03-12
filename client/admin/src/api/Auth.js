@@ -1,12 +1,9 @@
 const BLOG_APP_USER_TOKEN = 'blog-app-token-user';
+import listapi from './ListApi';
 class Auth {
     constructor() {
         this.useLocalStorage = (typeof localStorage !== 'undefined');
-        this.url = {
-            register: '/api/user/register',
-            login: '/api/user/login',
-            userInfoApi: '/api/user/info'
-        }
+        this.url = listapi.user;
 
         if (this.useLocalStorage) {
             this.token = localStorage.getItem(BLOG_APP_USER_TOKEN);
@@ -29,9 +26,9 @@ class Auth {
             method: 'post',
             headers: {
                 'accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ auth_cd: this.token })
+                'Content-Type': 'application/json',
+                'Token' : this.token
+            }
         }).then(this.checkStatus)
             .then(this.parseJson)
             .then((json) => json.user);

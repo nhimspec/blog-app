@@ -4,11 +4,24 @@ import mongoose from 'mongoose';
 const category = express.Router();
 var Category = mongoose.model('Category');
 
-category.post('/', (req, res, next) => {
+category.post('/category/create', (req, res, next) => {
     let category = new Category();
-    category.children.push({ name: 'Liesl' });
-    console.log(category);
-    // category.save();
+    category.name = req.body.name;
+    category.setSlug(req.body.name);
+    category.description = req.body.description;
+    category.save();
 });
+
+category.get('/category/list', (req, res, next) => {
+    Category.find().then((categories) => {
+        var categoryList = {};
+
+        categories.forEach((category) => {
+            categoryList[category._id] = category;
+        });
+       
+        return res.json(categoryList);
+    })
+})
 
 export default category;
