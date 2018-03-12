@@ -8,24 +8,25 @@ import CategoryTree from './CategoryTree';
 import { category } from '../../../api/Blog/Category';
 
 class ListCategory extends Component {
-    state = {
-        categoryList: {}
-    };
-
-    componentDidMount() {
-        let categoryList = category.getList();
-        this.setState({categoryList});
-    }
     render() {
         return (
-            <Card>
+            < Card >
                 <CardHeader>
                     <strong>Category</strong> List
                 </CardHeader>
                 <CardBlock className="card-body">
-                    <CategoryTree/>
+                    {
+                        this.props.categoryList.map((category) => (
+                            <CategoryTree
+                                key={category._id}
+                                id={category._id}
+                                name={category.name}
+                                categoryList={category.children}
+                            />
+                        ))
+                    }
                 </CardBlock>
-            </Card>
+            </Card >
         );
     }
 }

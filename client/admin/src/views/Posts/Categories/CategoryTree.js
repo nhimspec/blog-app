@@ -21,18 +21,25 @@ class CategoryTree extends Component {
             <Card>
                 <CardHeader role="tab" id="headingOne">
                     <h5 className="mb-0">
-                        <a className="collapsed" onClick={this.toggle}>
-                            Collapsible Group Item #1
-                                </a>
+                        <a className="collapsed" onClick={this.toggle}>{this.props.name}</a>
                     </h5>
                 </CardHeader>
-                <Collapse isOpen={this.state.collapse}>
-                    <CardBlock className="card-body">
-                        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird
-                        on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table,
-                        raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
-                                </CardBlock>
-                </Collapse>
+                {
+                    !!this.props.categoryList && !!this.props.categoryList.length &&
+                    <Collapse isOpen={this.state.collapse}>
+                        <CardBlock className="card-body">
+                            {
+                                this.props.categoryList.map((category) => (
+                                    <CategoryTree
+                                        key={category._id}
+                                        id={category._id}
+                                        name={category.name}
+                                    />
+                                ))
+                            }
+                        </CardBlock>
+                    </Collapse>
+                }
             </Card>
         );
     }
