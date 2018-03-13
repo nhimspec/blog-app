@@ -93,7 +93,6 @@ class Categories extends Component {
                     </Col>
                     <Col xs="12" md="6">
                         <FormCreate
-                            categoryList={categoryList}
                             formCreate={this.state.formCreate}
                             onSubmitFormCreate={this.onSubmitFormCreate}
                             onNameChangeFormCreate={this.onNameChangeFormCreate}

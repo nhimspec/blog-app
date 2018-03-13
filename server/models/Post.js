@@ -4,9 +4,9 @@ import uniqueValidator from 'mongoose-unique-validator';
 import config from '../config/';
 
 const PostSchema = new mongoose.Schema({
-    name: {
+    title: {
         type: String,
-        required: [true, "Name can't be blank"],
+        required: [true, "Title can't be blank"],
     },
     slug: {
         type: String,
@@ -15,7 +15,7 @@ const PostSchema = new mongoose.Schema({
     },
     image: String,
     content: String,
-    categories: [{ type: mongoose.Schema.ObjectId, ref: 'Categories' }]
+    categories: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Categories' }]
 }, { timestamps: true });
 
 PostSchema.plugin(uniqueValidator, { message: 'is already taken.' });

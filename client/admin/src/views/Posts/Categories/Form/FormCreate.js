@@ -22,7 +22,7 @@ class FormCreate extends Component {
     }
 
     render() {
-        const { categoryList, formCreate } = this.props;
+        const { formCreate } = this.props;
         return (
             <Form className="card form-horizontal" onSubmit={this.props.onSubmitFormCreate}>
                 <CardHeader>

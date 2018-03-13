@@ -15,7 +15,7 @@ const CategorySchema = new mongoose.Schema({
     },
     image: String,
     description: String,
-    posts: [{ type:  mongoose.Schema.ObjectId, ref: 'Post' }]
+    posts: [{ type:  mongoose.Schema.Types.ObjectId, ref: 'Post' }]
 }, { timestamps: true });
 
 CategorySchema.plugin(uniqueValidator, { message: 'is already taken.' });
