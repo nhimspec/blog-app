@@ -1,3 +1,17 @@
 a.collapsed{
     cursor: pointer;
 }
+button.upload_category{
+    display: block;
+    margin-bottom: 20px;
+}
+img.category_review{
+    max-width: 100%;
+    max-height: 300px;
+}
+.category-info{
+    img{
+        max-width: 100%;
+        display: block;
+    }
+}

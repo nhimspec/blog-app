@@ -6,8 +6,8 @@ import {
 
 import './category.scss';
 
-import FormCreate from "./FormCreate";
-import ListCategory from "./ListCategory";
+import FormCreate from "./Form/FormCreate";
+import ListCategory from "./List/ListCategory";
 import { category } from '../../../api/Blog/Category';
 
 class Categories extends Component {
@@ -15,7 +15,8 @@ class Categories extends Component {
         formCreate: {
             name: '',
             description: '',
-            parent_cat: ''
+            file: '',
+            imagePreviewUrl: ''
         },
         categoryList: []
     }
@@ -26,14 +27,28 @@ class Categories extends Component {
         });
     }
 
+    renameFileUpload = (fileName) => {
+        return `${Date.now()}-${fileName}`;
+    }
+
     onSubmitFormCreate = (evt) => {
-        category.create(this.state.formCreate).then((categoryList) => {
+        let fileName = this.renameFileUpload(this.state.formCreate.file.name);
+        let formData = new FormData();
+
+        formData.append('file', this.state.formCreate.file, fileName);
+        formData.append('name', this.state.formCreate.name);
+        formData.append('description', this.state.formCreate.description);
+        formData.append('image', fileName);
+        category.create(formData).then((category) => {
+            let categoryList= [...this.state.categoryList, category.category];
             this.setState({ categoryList });
         });
         this.setState({
             formCreate: {
                 name: '',
-                description: ''
+                description: '',
+                file: '',
+                imagePreviewUrl: ''
             }
         });
         evt.preventDefault();
@@ -50,10 +65,20 @@ class Categories extends Component {
         formCreate.description = e.target.value;
         this.setState({ formCreate })
     }
-    onParentCategoryChangeFormCreate = (e) => {
-        let formCreate = Object.assign({}, this.state.formCreate);
-        formCreate.parent_cat = e.target.value;
-        this.setState({ formCreate })
+    handleImageCategoryChangeFormCreate = (e) => {
+        e.preventDefault();
+
+        let reader = new FileReader();
+        let file = e.target.files[0];
+
+        reader.onloadend = () => {
+            let formCreate = Object.assign({}, this.state.formCreate);
+            formCreate.file = file;
+            formCreate.imagePreviewUrl = reader.result;
+            this.setState({ formCreate })
+        }
+
+        reader.readAsDataURL(file)
     }
 
     render() {
@@ -74,6 +99,7 @@ class Categories extends Component {
                             onNameChangeFormCreate={this.onNameChangeFormCreate}
                             onDescriptionChangeFormCreate={this.onDescriptionChangeFormCreate}
                             onParentCategoryChangeFormCreate={this.onParentCategoryChangeFormCreate}
+                            handleImageCategoryChangeFormCreate={this.handleImageCategoryChangeFormCreate}
                         />
                     </Col>
                 </Row>

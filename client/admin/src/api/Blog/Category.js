@@ -22,11 +22,9 @@ class Category {
         return fetch(this.url.create, {
             method: 'post',
             headers: {
-                'accept': 'application/json',
-                'Content-Type': 'application/json',
                 'Token': auth.token
             },
-            body: JSON.stringify(data)
+            body: data
         }).then(this.checkStatus)
             .then(this.parseJson);
     }

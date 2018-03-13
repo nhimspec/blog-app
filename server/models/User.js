@@ -33,7 +33,7 @@ UserSchema.methods.validPassword = function (password) {
 };
 
 UserSchema.methods.setImage = function (imageFile) {
-    this.avatar = config.store.image + imageFile;
+    this.avatar = config.store.image.user + imageFile;
 };
 
 UserSchema.methods.setPassword = function (password) {

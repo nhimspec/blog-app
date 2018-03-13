@@ -4,8 +4,8 @@ import {
     CardHeader,
     CardBlock
 } from "reactstrap";
-import CategoryTree from './CategoryTree';
-import { category } from '../../../api/Blog/Category';
+import CategoryInfo from './CategoryInfo';
+import { category } from '../../../../api/Blog/Category';
 
 class ListCategory extends Component {
     render() {
@@ -17,11 +17,9 @@ class ListCategory extends Component {
                 <CardBlock className="card-body">
                     {
                         this.props.categoryList.map((category) => (
-                            <CategoryTree
+                            <CategoryInfo
                                 key={category._id}
-                                id={category._id}
-                                name={category.name}
-                                categoryList={category.children}
+                                category={category}
                             />
                         ))
                     }

@@ -1,10 +1,9 @@
 import express from 'express';
 import mongoose from 'mongoose';
-import config from '../../config';
-import fileUpload from 'express-fileupload';
-import multiparty from 'multiparty';
+import config from '../../config/';
 import path from 'path';
 import validator from '../../utils/validator';
+import fileUpload from 'express-fileupload';
 
 var User = mongoose.model('User');
 const register = express.Router();
@@ -27,7 +26,7 @@ register.post('/register', (req, res, next) => {
             user.setPassword(req.body.password);
             user.save()
                 .then(() => {
-                    let uploadDir = path.join(config.upload.image, req.body.avatar);
+                    let uploadDir = path.join(config.upload.image.user, req.body.avatar);
                     req.body.file.mv(uploadDir, (err) => {
                         if (err)
                             return res.status(403).json({ file: 'Upload went wrong!!' })
